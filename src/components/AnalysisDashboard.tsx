@@ -13,6 +13,7 @@ import {
   Download,
   RefreshCw
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface AnalysisResult {
   overall: number;
@@ -47,6 +48,8 @@ const mockResults: AnalysisResult = {
 };
 
 const AnalysisDashboard = ({ hasFile }: { hasFile: boolean }) => {
+  const { toast } = useToast();
+  
   if (!hasFile) {
     return null;
   }
@@ -123,7 +126,12 @@ const AnalysisDashboard = ({ hasFile }: { hasFile: boolean }) => {
             <p className="text-xs text-muted-foreground mb-3">
               {mockResults.aiDetection.issues.length} potential AI-generated sections
             </p>
-            <Button variant="outline" size="sm" className="w-full">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full"
+              onClick={() => alert('AI Detection Details:\n- Section 3 shows AI patterns\n- Abstract needs humanization\n- 85% confidence score')}
+            >
               View Details <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           </Card>
@@ -150,7 +158,12 @@ const AnalysisDashboard = ({ hasFile }: { hasFile: boolean }) => {
             <p className="text-xs text-muted-foreground mb-3">
               {mockResults.plagiarism.matches} potential matches found
             </p>
-            <Button variant="outline" size="sm" className="w-full">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full"
+              onClick={() => alert('Plagiarism Details:\n- 2 potential matches found\n- Sources: Patent DB, Academic\n- 95% originality score')}
+            >
               View Details <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           </Card>
@@ -177,7 +190,12 @@ const AnalysisDashboard = ({ hasFile }: { hasFile: boolean }) => {
             <p className="text-xs text-muted-foreground mb-3">
               {mockResults.grammar.errors} grammar issues found
             </p>
-            <Button variant="outline" size="sm" className="w-full">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full"
+              onClick={() => alert('Grammar Details:\n- 12 grammar issues found\n- 8 suggestions available\n- 72% score (needs improvement)')}
+            >
               View Details <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           </Card>
@@ -204,7 +222,12 @@ const AnalysisDashboard = ({ hasFile }: { hasFile: boolean }) => {
             <p className="text-xs text-muted-foreground mb-3">
               {mockResults.format.violations.length} format violations
             </p>
-            <Button variant="outline" size="sm" className="w-full">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full"
+              onClick={() => alert('Format Details:\n- Missing claim dependencies\n- Incorrect figure numbering\n- Abstract too long (>150 words)')}
+            >
               View Details <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           </Card>
@@ -212,11 +235,34 @@ const AnalysisDashboard = ({ hasFile }: { hasFile: boolean }) => {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button variant="hero" size="lg">
+          <Button 
+            variant="hero" 
+            size="lg"
+            onClick={() => {
+              toast({
+                title: "Re-analyzing document",
+                description: "This will take a few moments...",
+              });
+            }}
+          >
             <RefreshCw className="h-5 w-5 mr-2" />
             Re-analyze Document
           </Button>
-          <Button variant="outline" size="lg">
+          <Button 
+            variant="outline" 
+            size="lg"
+            onClick={() => {
+              // Create and download a mock report
+              const report = `Patent Analysis Report\n\nOverall Score: ${mockResults.overall}%\n\nAI Detection: ${mockResults.aiDetection.score}%\nPlagiarism: ${mockResults.plagiarism.score}%\nGrammar: ${mockResults.grammar.score}%\nFormat: ${mockResults.format.score}%\n\nGenerated on: ${new Date().toLocaleDateString()}`;
+              const blob = new Blob([report], { type: 'text/plain' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'patent-analysis-report.txt';
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+          >
             <Download className="h-5 w-5 mr-2" />
             Download Report
           </Button>

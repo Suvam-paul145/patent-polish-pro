@@ -33,11 +33,20 @@ const HeroSection = () => {
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-fade-in-up">
-            <Button variant="hero" size="lg" className="group">
+            <Button 
+              variant="hero" 
+              size="lg" 
+              className="group"
+              onClick={() => document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               <Upload className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
               Upload Patent Document
             </Button>
-            <Button variant="outline" size="lg">
+            <Button 
+              variant="outline" 
+              size="lg"
+              onClick={() => window.open('/developer', '_blank')}
+            >
               <FileText className="h-5 w-5 mr-2" />
               See Demo
             </Button>
