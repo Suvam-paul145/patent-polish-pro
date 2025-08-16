@@ -25,11 +25,35 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 
+interface TestResults {
+  overall: number;
+  aiDetection: {
+    score: number;
+    status: string;
+    confidence: number;
+  };
+  plagiarism: {
+    score: number;
+    matches: number;
+    sources: string[];
+  };
+  grammar: {
+    score: number;
+    errors: number;
+    suggestions: number;
+  };
+  format: {
+    score: number;
+    violations: number;
+    compliance: string;
+  };
+}
+
 const DeveloperDashboard = () => {
   const [testFile, setTestFile] = useState<File | null>(null);
   const [testText, setTestText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [testResults, setTestResults] = useState<any>(null);
+  const [testResults, setTestResults] = useState<TestResults | null>(null);
   const { toast } = useToast();
 
   const handleFileUpload = (file: File) => {
@@ -366,6 +390,42 @@ const DeveloperDashboard = () => {
                 <Button variant="hero">
                   <Save className="h-4 w-4 mr-2" />
                   Save Configuration
+                </Button>
+              </div>
+            </Card>
+
+            {/* API Key Management Card */}
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <Code className="h-5 w-5 mr-2" />
+                API Key Management
+              </h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">OpenAI API Key</label>
+                    <Input type="password" placeholder="sk-..." />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Google AI API Key</label>
+                    <Input type="password" placeholder="AIza..." />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Scopus API Key</label>
+                    <Input type="password" placeholder="Your Scopus API Key" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">IEEE API Key</label>
+                    <Input type="password" placeholder="Your IEEE API Key" />
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end mt-6">
+                <Button variant="hero">
+                  <Save className="h-4 w-4 mr-2" />
+                  Save API Keys
                 </Button>
               </div>
             </Card>
